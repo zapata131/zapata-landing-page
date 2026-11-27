@@ -1,5 +1,5 @@
 /* zapata131.com
-   Warm paper and ink. One accent: editor's red pen. */
+   Dracula (dark) and Alucard (light), all monospace, so the jump to ZapataOS feels like the same machine. */
 
 :root {
   color-scheme: light dark;
@@ -12,46 +12,65 @@
     color-scheme: light;
   }
 
-  --bg-light: #f7f4ee;
-  --bg-dark: #191816;
-  --text-light: #1f1b16;
-  --text-dark: #efe9de;
-  --text-2-light: #5e554a;
-  --text-2-dark: #aaa398;
-  --muted-light: #736a5e;
-  --muted-dark: #8a847a;
-  --accent-light: #b3361f;
-  --accent-dark: #f0896b;
+  /* Dracula */
+  --bg-d: #282a36;
+  --line-d: #44475a;
+  --fg-d: #f8f8f2;
+  --muted-d: #a4abcf;
+  --purple-d: #bd93f9;
+  --pink-d: #ff79c6;
+  --cyan-d: #8be9fd;
+  --green-d: #50fa7b;
+  --yellow-d: #f1fa8c;
 
-  /* Fallback for browsers without light-dark() */
-  --bg: var(--bg-light);
-  --text: var(--text-light);
-  --text-2: var(--text-2-light);
-  --muted: var(--muted-light);
-  --accent: var(--accent-light);
+  /* Alucard, Dracula's light variant */
+  --bg-l: #fffbeb;
+  --line-l: #e4dfcb;
+  --fg-l: #1f1f1f;
+  --muted-l: #5e5a46;
+  --purple-l: #644ac9;
+  --pink-l: #a3144d;
+  --cyan-l: #036a96;
+  --green-l: #14710a;
+  --yellow-l: #846e15;
+
+  --bg: var(--bg-l);
+  --line: var(--line-l);
+  --fg: var(--fg-l);
+  --muted: var(--muted-l);
+  --purple: var(--purple-l);
+  --pink: var(--pink-l);
+  --cyan: var(--cyan-l);
+  --green: var(--green-l);
+  --yellow: var(--yellow-l);
 
   @media (prefers-color-scheme: dark) {
-    --bg: var(--bg-dark);
-    --text: var(--text-dark);
-    --text-2: var(--text-2-dark);
-    --muted: var(--muted-dark);
-    --accent: var(--accent-dark);
+    --bg: var(--bg-d);
+    --line: var(--line-d);
+    --fg: var(--fg-d);
+    --muted: var(--muted-d);
+    --purple: var(--purple-d);
+    --pink: var(--pink-d);
+    --cyan: var(--cyan-d);
+    --green: var(--green-d);
+    --yellow: var(--yellow-d);
   }
 
   @supports (color: light-dark(white, black)) {
-    --bg: light-dark(var(--bg-light), var(--bg-dark));
-    --text: light-dark(var(--text-light), var(--text-dark));
-    --text-2: light-dark(var(--text-2-light), var(--text-2-dark));
-    --muted: light-dark(var(--muted-light), var(--muted-dark));
-    --accent: light-dark(var(--accent-light), var(--accent-dark));
+    --bg: light-dark(var(--bg-l), var(--bg-d));
+    --line: light-dark(var(--line-l), var(--line-d));
+    --fg: light-dark(var(--fg-l), var(--fg-d));
+    --muted: light-dark(var(--muted-l), var(--muted-d));
+    --purple: light-dark(var(--purple-l), var(--purple-d));
+    --pink: light-dark(var(--pink-l), var(--pink-d));
+    --cyan: light-dark(var(--cyan-l), var(--cyan-d));
+    --green: light-dark(var(--green-l), var(--green-d));
+    --yellow: light-dark(var(--yellow-l), var(--yellow-d));
   }
 
-  --hairline: color-mix(in srgb, var(--text) 10%, transparent);
+  --mono: 'Fira Code', ui-monospace, 'SF Mono', Menlo, monospace;
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
-  --sans: 'Inter', system-ui, sans-serif;
-  --serif: 'Newsreader', Georgia, serif;
-
-  accent-color: var(--accent);
+  accent-color: var(--purple);
 }
 
 *,
@@ -62,234 +81,291 @@
 
 body {
   margin: 0;
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
   background: var(--bg);
-  color: var(--text);
-  font: 400 1rem/1.6 var(--sans);
+  color: var(--fg);
+  font: 400 14px/1.55 var(--mono);
+  font-variant-ligatures: contextual;
   -webkit-font-smoothing: antialiased;
-  text-rendering: optimizeLegibility;
 }
 
 ::selection {
-  background: color-mix(in srgb, var(--accent) 25%, transparent);
+  background: color-mix(in srgb, var(--purple) 35%, transparent);
 }
 
 a {
-  color: inherit;
-  text-decoration-line: underline;
-  text-decoration-color: var(--hairline);
-  text-decoration-thickness: 1px;
-  text-underline-offset: 0.2em;
-  transition: text-decoration-color 160ms var(--ease), color 160ms var(--ease);
+  color: var(--cyan);
+  text-decoration: none;
+  transition: color 160ms var(--ease);
 }
 
 a:hover {
-  color: var(--accent);
-  text-decoration-color: currentColor;
+  color: var(--green);
 }
 
 :focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
-  border-radius: 2px;
+  outline: 2px dashed var(--purple);
+  outline-offset: 3px;
 }
 
 .page {
-  max-width: 40rem;
-  margin: 0 auto;
-  padding: 96px 24px 64px;
-  animation: enter 400ms var(--ease) both;
-}
-
-@keyframes enter {
-  from {
-    opacity: 0;
-    transform: translateY(8px);
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .page {
-    animation: none;
-  }
+  width: 100%;
+  max-width: 920px;
+  padding: 40px 24px 32px;
 }
 
 /* Intro */
 
 .intro {
   position: relative;
-  margin-bottom: 64px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--line);
 }
 
-.intro p {
-  margin: 0 0 12px;
-  max-width: 32rem;
-  color: var(--text-2);
+.prompt {
+  margin: 0 0 4px;
+  color: var(--muted);
+  font-size: 13px;
 }
 
 h1 {
-  font: 500 2.75rem/1.05 var(--serif);
-  letter-spacing: -0.02em;
-  margin: 0 0 24px;
+  margin: 0 0 12px;
+  font-size: 32px;
+  line-height: 1.15;
+  font-weight: 600;
+  letter-spacing: -0.01em;
 }
 
-.intro .lede {
-  font-size: 1.125rem;
-  line-height: 1.55;
-  color: var(--text);
+.hl {
+  color: var(--purple);
 }
 
-/* The one drawing: a Lorenz attractor, the system from the 2013 paper. */
+.hl-c {
+  color: var(--pink);
+}
+
+.bio {
+  margin: 0 0 20px;
+  max-width: 62ch;
+  color: var(--fg);
+  opacity: 0.9;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.social {
+  display: flex;
+  gap: 4px;
+  margin-left: -8px;
+}
+
+.social a {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  color: var(--fg);
+  transition: color 160ms var(--ease), background-color 160ms var(--ease);
+}
+
+.social a:hover {
+  color: var(--purple);
+  background: color-mix(in srgb, var(--line) 60%, transparent);
+}
+
+.social svg {
+  height: 20px;
+  width: auto;
+  max-width: 22px;
+}
+
+.social a::after {
+  content: attr(data-tip);
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 50%;
+  translate: -50% -4px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  background: var(--line);
+  color: var(--fg);
+  font-size: 12px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 160ms var(--ease), translate 160ms var(--ease);
+}
+
+.social a:hover::after,
+.social a:focus-visible::after {
+  opacity: 1;
+  translate: -50% 0;
+}
+
+/* The way into ZapataOS */
+.boot {
+  display: inline-flex;
+  align-items: center;
+  height: 40px;
+  padding: 0 16px;
+  border: 1px solid var(--green);
+  border-radius: 4px;
+  color: var(--green);
+  font-weight: 500;
+  box-shadow: 3px 3px 0 color-mix(in srgb, var(--green) 30%, transparent);
+  transition: background-color 160ms var(--ease), color 160ms var(--ease), translate 120ms var(--ease), box-shadow 120ms var(--ease);
+}
+
+.boot:hover {
+  background: var(--green);
+  color: var(--bg);
+}
+
+.boot:active {
+  translate: 2px 2px;
+  box-shadow: 1px 1px 0 color-mix(in srgb, var(--green) 30%, transparent);
+}
+
+.cursor {
+  margin-left: 2px;
+  animation: blink 1.1s steps(1) infinite;
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cursor {
+    animation: none;
+  }
+}
+
+/* Lorenz attractor, the system from the 2013 paper */
 .lorenz {
   position: absolute;
-  top: -40px;
-  right: -8px;
-  width: 128px;
+  top: -8px;
+  right: 0;
+  width: 96px;
   aspect-ratio: 160 / 184;
-  background: var(--accent);
-  opacity: 0.55;
+  background: var(--purple);
+  opacity: 0.6;
   -webkit-mask: url(assets/lorenz.svg) center / contain no-repeat;
   mask: url(assets/lorenz.svg) center / contain no-repeat;
   pointer-events: none;
 }
 
-@media (max-width: 640px) {
-  .page {
-    padding-top: 64px;
-  }
+/* Sections: two columns on wide screens */
 
-  h1 {
-    font-size: 2.25rem;
-    max-width: 70%;
-  }
-
-  .lorenz {
-    width: 88px;
-    top: -24px;
-    right: 0;
-  }
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px 48px;
+  padding-top: 20px;
 }
 
-/* Sections */
-
 section {
-  margin-bottom: 48px;
+  min-width: 0;
 }
 
 h2 {
-  font: 500 0.875rem/1.4 var(--sans);
+  margin: 0 0 4px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--pink);
+}
+
+h2 span {
   color: var(--muted);
-  margin: 0 0 8px;
-  padding-bottom: 8px;
-  border-bottom: 1px solid var(--hairline);
+  font-weight: 400;
 }
 
 .list {
   list-style: none;
-  margin: 0;
+  margin: 0 0 16px;
   padding: 0;
 }
 
 .list li {
   display: grid;
-  grid-template-columns: 1fr auto;
-  column-gap: 16px;
-  padding: 12px 0;
+  grid-template-columns: minmax(0, 1fr) auto;
+  column-gap: 12px;
+  padding: 4px 0;
 }
 
 .list li > a {
   font-weight: 500;
-  text-decoration-color: transparent;
-}
-
-.list li > a:hover {
-  text-decoration-color: currentColor;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .list .meta {
-  font-size: 0.8125rem;
-  color: var(--muted);
-  font-variant-numeric: tabular-nums;
+  color: var(--yellow);
+  font-size: 12px;
+  padding-top: 1px;
   white-space: nowrap;
-  padding-top: 2px;
 }
 
 .list p {
   grid-column: 1 / -1;
-  margin: 4px 0 0;
-  font-size: 0.9375rem;
-  color: var(--text-2);
-}
-
-cite {
-  font-style: normal;
+  margin: 0;
+  font-size: 13px;
+  color: var(--muted);
 }
 
 /* Footer */
 
 .footer {
-  margin-top: 64px;
-  padding-top: 24px;
-  border-top: 1px solid var(--hairline);
-  font-size: 0.9375rem;
-}
-
-.contact {
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
   display: flex;
   flex-wrap: wrap;
-  gap: 8px 20px;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px 24px;
+  font-size: 12px;
+  color: var(--muted);
 }
 
 .quote {
-  margin: 32px 0 0;
-  max-width: 32rem;
-  font: 400 1.0625rem/1.5 var(--serif);
-  color: var(--text-2);
-}
-
-.quote footer {
-  margin-top: 4px;
-  font: 400 0.8125rem/1.4 var(--sans);
-  color: var(--muted);
+  margin: 0;
+  flex: 1 1 360px;
+  font-style: normal;
 }
 
 .colophon {
   display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 8px 20px;
-  margin-top: 32px;
-  font-size: 0.8125rem;
-  color: var(--muted);
-}
-
-.colophon span {
-  margin-right: auto;
-}
-
-.colophon a {
-  color: var(--muted);
-}
-
-.colophon a:hover {
-  color: var(--accent);
+  gap: 16px;
+  white-space: nowrap;
 }
 
 .theme-toggle {
   font: inherit;
-  color: var(--muted);
+  color: var(--cyan);
   background: none;
   border: 0;
   padding: 0;
   cursor: pointer;
-  text-decoration: underline 1px var(--hairline);
-  text-underline-offset: 0.2em;
 }
 
 .theme-toggle:hover {
-  color: var(--accent);
+  color: var(--green);
 }
 
-/* Show the action that flips the rendered scheme. */
+/* Label shows the scheme you'd switch to */
 .to-light {
   display: none;
 }
@@ -324,6 +400,40 @@ cite {
   }
 }
 
-.os-link {
-  font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+/* Phones */
+
+@media (max-width: 720px) {
+  body {
+    display: block;
+  }
+
+  .page {
+    padding: 24px 16px;
+  }
+
+  h1 {
+    font-size: 26px;
+    max-width: 75%;
+  }
+
+  .lorenz {
+    width: 64px;
+  }
+
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .actions {
+    gap: 12px;
+  }
+
+  .boot {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+.caret {
+  margin-right: 1ch;
 }

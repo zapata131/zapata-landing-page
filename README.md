@@ -12,7 +12,7 @@ Google, former researcher in complex networks, board game person.
 ```text
 index.html      English page
 es/index.html   Spanish page (shares styles.css and script.js)
-styles.css      Layout and the light/dark palette
+styles.css      Layout and the Dracula/Alucard palette
 script.js       Theme toggle and the random quote in the footer
 assets/         Open Graph image and the Lorenz attractor drawing
 desktop/        ZapataOS, a fake retro desktop linked from the footer
@@ -40,7 +40,10 @@ the attractor needs a server.
 - **The drawing.** `assets/lorenz.svg` is the x–z projection of a Lorenz attractor (σ = 10, ρ = 28, β = 8/3),
   the system used in the 2013 negative-couplings paper. CSS uses it as a mask so it takes the accent color in
   both themes.
-- **ZapataOS.** Draggable windows on desktop, stacked windows on phones. Try `help` in the terminal.
+- **ZapataOS.** The green button in the header boots it. Draggable windows on desktop, stacked windows on
+  phones. Try `help` in the terminal.
+- **Icons.** Contact icons are inline SVGs from [Font Awesome Free](https://fontawesome.com/license/free)
+  (CC BY 4.0).
 
 ## Deploy
 

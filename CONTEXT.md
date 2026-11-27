@@ -17,11 +17,13 @@ Former professor and researcher at the Universidad de Guadalajara (synchronizati
 
 ## Design
 
-- Warm paper and ink. One accent, an editor's red: `#b3361f` light, `#f0896b` dark.
-- Inter for text, Newsreader for the name and the quote.
-- One drawing: a Lorenz attractor (`assets/lorenz.svg`) used as a CSS mask.
+- Dracula palette in dark mode, Alucard (Dracula's light variant) in light mode.
+- Everything in Fira Code, so the jump to ZapataOS feels like the same machine.
+- Fits one laptop screen: two-column grid of sections, one-line descriptions, icons for contact links.
+- A green "boot ZapataOS" button in the header is the way into `desktop/`.
+- One drawing: a Lorenz attractor (`assets/lorenz.svg`) used as a CSS mask, in purple.
 - Follows the system color scheme; footer button overrides it (`<meta name="color-scheme">` + `localStorage`).
-- ZapataOS (`desktop/`) keeps its Dracula retro look on purpose.
+- Contact icons are inline SVGs from Font Awesome Free (CC BY 4.0), no icon font on the main page.
 
 ## Writing rules
 

@@ -72,11 +72,6 @@ const quotes = [
 const box = document.getElementById('quote');
 if (box) {
     const q = quotes[Math.floor(Math.random() * quotes.length)];
-    const text = document.createElement('p');
-    text.style.margin = '0';
-    text.textContent = `“${q.text}”`;
-    const by = document.createElement('footer');
-    by.textContent = q.author;
-    box.replaceChildren(text, ...(q.author === 'Unknown' ? [] : [by]));
+    box.textContent = `// “${q.text}”` + (q.author === 'Unknown' ? '' : ` — ${q.author}`);
     box.hidden = false;
 }
