@@ -150,7 +150,7 @@ if (box) {
         if (!dragging) yaw += spin;
         head = (head + 3) % pts.length;
 
-        const s = size / 64, cy = Math.cos(yaw), sy = Math.sin(yaw), cp = Math.cos(pitch), sp = Math.sin(pitch);
+        const s = size / 60, cy = Math.cos(yaw), sy = Math.sin(yaw), cp = Math.cos(pitch), sp = Math.sin(pitch);
         ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
         ctx.clearRect(0, 0, size, size);
         ctx.lineJoin = 'round';

@@ -449,8 +449,9 @@ h2 span {
   background: none;
   opacity: 1;
   aspect-ratio: 1;
-  width: 120px;
-  top: -16px;
+  width: 168px;
+  top: -20px;
+  right: -12px;
   pointer-events: auto;
   cursor: grab;
   touch-action: none;
@@ -464,6 +465,13 @@ h2 span {
   display: block;
   width: 100%;
   height: 100%;
+}
+
+@media (max-width: 900px) {
+  .lorenz.live {
+    width: 128px;
+    right: 0;
+  }
 }
 
 @media (max-width: 720px) {
