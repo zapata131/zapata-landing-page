@@ -6,22 +6,47 @@ on:
       - master
   workflow_dispatch:
 
+permissions:
+  contents: read
+
+# Never run two uploads at once; a newer push waits for the current one.
+concurrency:
+  group: ftp-deploy
+  cancel-in-progress: false
+
 jobs:
   web-deploy:
-    name: 🎉 Deploy
+    name: Deploy
     runs-on: ubuntu-latest
     steps:
-      - name: 🚚 Get latest code
-        uses: actions/checkout@v4
+      - name: Get latest code
+        uses: actions/checkout@v6
 
-      - name: 📂 Prepare deployment files
+      - name: Prepare deployment files
         run: |
           mkdir deploy
           cp index.html styles.css script.js deploy/
-          cp -r icons/ assets/ desktop/ es/ deploy/
+          cp -r icons assets desktop es deploy/
 
-      - name: 🚀 Sync files
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+      - name: Check that every local link resolves
+        run: |
+          cd deploy
+          status=0
+          for page in index.html es/index.html desktop/index.html; do
+            dir=$(dirname "$page")
+            for ref in $(grep -oE '(href|src)="[^"#?]+"' "$page" | sed -E 's/^(href|src)="//; s/"$//' | grep -vE '^(https?:|mailto:|//)'); do
+              target="$dir/$ref"
+              case "$ref" in */) target="$target/index.html";; esac
+              if [ ! -e "$target" ]; then echo "Missing: $page -> $ref"; status=1; fi
+            done
+          done
+          for ref in $(grep -oE 'url\([^)]+\)' styles.css | sed -E 's/url\(//; s/\)$//' | tr -d "'\""); do
+            [ -e "$ref" ] || { echo "Missing: styles.css -> $ref"; status=1; }
+          done
+          exit $status
+
+      - name: Sync files
+        uses: SamKirkland/FTP-Deploy-Action@v4.4.0
         with:
           server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
