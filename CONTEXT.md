@@ -23,7 +23,8 @@ Former professor and researcher at the Universidad de Guadalajara (synchronizati
 - Everything in Fira Code, so the jump to ZapataOS feels like the same machine.
 - Fits one laptop screen: two-column grid of sections, one-line descriptions, icons for contact links.
 - A green "boot ZapataOS" button in the header is the way into `desktop/`.
-- One drawing: a Lorenz attractor (`assets/lorenz.svg`) used as a CSS mask, in purple.
+- One drawing: a Lorenz attractor (`assets/lorenz.svg`) used as a CSS mask, in purple. With JS it becomes a 3D
+  canvas with six coupled Lorenz systems on it that synchronize and desynchronize (nodes pink, edges cyan).
 - Follows the system color scheme; footer button overrides it (`<meta name="color-scheme">` + `localStorage`).
 - Contact icons are inline SVGs from Font Awesome Free (CC BY 4.0), no icon font on the main page.
 

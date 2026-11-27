@@ -484,4 +484,5 @@ h2 span {
 .lorenz {
   color: var(--purple);
   border: 0 solid var(--pink);
+  outline: 0 solid var(--cyan);
 }

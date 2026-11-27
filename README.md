@@ -39,7 +39,10 @@ the attractor needs a server.
   `hreflang` links.
 - **The drawing.** `assets/lorenz.svg` is the x–z projection of a Lorenz attractor (σ = 10, ρ = 28, β = 8/3),
   the system used in the 2013 negative-couplings paper. `script.js` replaces it with a canvas that integrates
-  the system in 3D, spins it slowly, and traces the orbit with a bright point; you can drag it to turn it.
+  the system in 3D and spins it slowly; you can drag it to turn it. On top of it runs a network of six coupled
+  Lorenz systems (a ring plus its three diagonals), drawn as points joined by their edges. The coupling `c`
+  ramps from 0 to 2, they synchronize and the graph shrinks to one point; after a while the coupling switches
+  off and they drift apart. Clicking the drawing switches it too.
   With reduced motion or no JavaScript, the static SVG (a CSS mask in the accent color) stays.
 - **ZapataOS.** The green button in the header boots it (boot screen once per session; any key skips).
   Apps: Identity, B-Sides, Research, Lorenz (3D attractor with a ρ slider), Dice (2d6 with a Catan

@@ -120,7 +120,9 @@ if (box) {
     box.hidden = false;
 }
 
-// Lorenz attractor in 3D: slow spin, a bright point retracing the orbit, drag to turn it.
+// Lorenz attractor in 3D with a small network on it: six coupled Lorenz systems, drawn as nodes
+// joined by their edges. With the coupling on they synchronize and the graph shrinks to one point;
+// with it off they drift apart. It switches by itself, or on click. Drag to turn it.
 // Without JS (or with reduced motion) the static SVG mask from the CSS stays.
 (() => {
     const host = document.querySelector('.lorenz');
@@ -141,6 +143,54 @@ if (box) {
         if (i > 500 && i % 3 === 0) pts.push([x, y, z - 25]);
     }
 
+    // The network: a ring of six nodes plus the three diagonals, every state variable coupled.
+    // Its Laplacian has lambda_2 = 3, so the synchronized state is stable once 3c beats the largest
+    // Lyapunov exponent of the Lorenz system (about 0.9). That's only local: held at c = 0.5 the
+    // nodes usually get stuck split between the two wings. So c ramps from 0 to 2 over RAMP time
+    // units, which synchronized every random start tried and takes long enough to watch.
+    const N = 6, C = 2, RAMP = 13, ON = 30, OFF = 16, TAIL = 40;
+    const edges = [];
+    for (let i = 0; i < N; i++) {
+        edges.push([i, (i + 1) % N]);
+        if (i < N / 2) edges.push([i, i + N / 2]);
+    }
+    let u = new Float64Array(3 * N), coupled = true, clock = 0, c = 0;
+    const tails = Array.from({ length: N }, () => []);
+    for (let i = 0; i < N; i++) {
+        const p = pts[i * 600];
+        u.set([p[0], p[1], p[2] + 25], 3 * i);
+    }
+
+    function slopes(u) {
+        const d = new Float64Array(3 * N);
+        for (let i = 0; i < N; i++) d.set(f(u[3 * i], u[3 * i + 1], u[3 * i + 2]), 3 * i);
+        if (c) {
+            for (const [a, b] of edges) {
+                for (let k = 0; k < 3; k++) {
+                    const g = c * (u[3 * b + k] - u[3 * a + k]);
+                    d[3 * a + k] += g;
+                    d[3 * b + k] -= g;
+                }
+            }
+        }
+        return d;
+    }
+
+    function step() {
+        const k1 = slopes(u);
+        const k2 = slopes(u.map((v, i) => v + h / 2 * k1[i]));
+        const k3 = slopes(u.map((v, i) => v + h / 2 * k2[i]));
+        const k4 = slopes(u.map((v, i) => v + h * k3[i]));
+        u = u.map((v, i) => v + h / 6 * (k1[i] + 2 * k2[i] + 2 * k3[i] + k4[i]));
+    }
+
+    function setCoupled(on) {
+        coupled = on;
+        clock = 0;
+        // Synchronized nodes are identical to machine precision, so they need a nudge to part ways.
+        if (!on) u = u.map((v) => v + Math.random() - 0.5);
+    }
+
     const canvas = document.createElement('canvas');
     const ctx = canvas.getContext('2d');
     host.append(canvas);
@@ -159,23 +209,26 @@ if (box) {
     function readColors() {
         // Read resolved colors from the host (the custom properties hold light-dark(), which canvas can't parse)
         const cs = getComputedStyle(host);
-        colors = { line: cs.color, head: cs.borderTopColor };
+        colors = { line: cs.color, head: cs.borderTopColor, edge: cs.outlineColor, font: cs.fontFamily };
     }
     readColors();
     new MutationObserver(readColors).observe(document.head, { subtree: true, attributes: true });
     matchMedia('(prefers-color-scheme: dark)').addEventListener('change', readColors);
 
-    let yaw = -0.7, pitch = -0.3, spin = 0.0035, head = 0, dragging = null;
+    let yaw = -0.7, pitch = -0.3, spin = 0.0035, dragging = null;
 
     canvas.addEventListener('pointerdown', (e) => {
-        dragging = { x: e.clientX, y: e.clientY, yaw, pitch };
+        dragging = { x: e.clientX, y: e.clientY, yaw, pitch, moved: false };
         canvas.setPointerCapture(e.pointerId);
     });
     canvas.addEventListener('pointermove', (e) => {
         if (!dragging || !canvas.hasPointerCapture(e.pointerId)) return;
+        if (Math.hypot(e.clientX - dragging.x, e.clientY - dragging.y) > 4) dragging.moved = true;
         yaw = dragging.yaw + (e.clientX - dragging.x) * 0.02;
         pitch = Math.max(-1.3, Math.min(1.3, dragging.pitch + (e.clientY - dragging.y) * 0.02));
     });
+    // A click that isn't a drag switches the coupling.
+    canvas.addEventListener('pointerup', () => { if (dragging && !dragging.moved) setCoupled(!coupled); });
     canvas.addEventListener('lostpointercapture', () => { dragging = null; });
 
     function project(p, cy, sy, cp, sp, s) {
@@ -188,11 +241,28 @@ if (box) {
     let visible = true;
     new IntersectionObserver(([e]) => { visible = e.isIntersecting; }).observe(host);
 
-    function frame() {
+    let last = performance.now(), owed = 0, steps = 0;
+    function frame(now) {
         requestAnimationFrame(frame);
-        if (!visible) return;
-        if (!dragging) yaw += spin;
-        head = (head + 3) % pts.length;
+        if (!visible) { last = now; return; }
+
+        // Advance the network by wall-clock time (540 steps a second, so it runs the same on 60 Hz
+        // and 120 Hz screens), one tail point every 3 steps.
+        const dt = Math.min((now - last) / 1000, 0.05);
+        last = now;
+        if (!dragging) yaw += spin * dt * 60;
+        for (owed += dt * 540; owed >= 1; owed--) {
+            step();
+            if (++steps % 3) continue;
+            tails.forEach((t, i) => {
+                t.push([u[3 * i], u[3 * i + 1], u[3 * i + 2] - 25]);
+                if (t.length > TAIL) t.shift();
+            });
+        }
+        clock += dt * 540 * h;
+        if (clock > (coupled ? ON : OFF)) setCoupled(!coupled);
+        c = coupled ? C * Math.min(1, clock / RAMP) : 0;
+        if (!tails[0].length) return;
 
         const s = size / 60, cy = Math.cos(yaw), sy = Math.sin(yaw), cp = Math.cos(pitch), sp = Math.sin(pitch);
         ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -210,26 +280,46 @@ if (box) {
         });
         ctx.stroke();
 
-        // Bright tail following the orbit
-        const tail = 140;
+        // A short bright tail behind each node, fading toward its end
+        const trails = tails.map((t) => t.map((p) => project(p, cy, sy, cp, sp, s)));
         ctx.strokeStyle = colors.head;
-        ctx.lineWidth = 1.2;
-        for (let i = tail; i > 0; i -= 10) {
-            ctx.globalAlpha = 1 - i / tail;
-            ctx.beginPath();
-            for (let j = Math.max(0, i - 11); j <= i; j++) {
-                const p = pts[(head - j + pts.length) % pts.length];
-                const [u, v] = project(p, cy, sy, cp, sp, s);
-                j === Math.max(0, i - 11) ? ctx.moveTo(u, v) : ctx.lineTo(u, v);
+        ctx.lineWidth = 1.1;
+        for (const t of trails) {
+            for (let i = 0; i < t.length - 1; i += 8) {
+                ctx.globalAlpha = 0.9 * (i + 8) / TAIL;
+                ctx.beginPath();
+                t.slice(i, i + 9).forEach(([a, b], j) => { j ? ctx.lineTo(a, b) : ctx.moveTo(a, b); });
+                ctx.stroke();
             }
-            ctx.stroke();
         }
-        const [hu, hv] = project(pts[head], cy, sy, cp, sp, s);
+
+        // Edges between the nodes. Synchronized, they have zero length and vanish.
+        const nodes = trails.map((t) => t[t.length - 1]);
+        ctx.globalAlpha = 0.7;
+        ctx.strokeStyle = colors.edge;
+        ctx.lineWidth = 0.8;
+        ctx.beginPath();
+        for (const [a, b] of edges) {
+            ctx.moveTo(nodes[a][0], nodes[a][1]);
+            ctx.lineTo(nodes[b][0], nodes[b][1]);
+        }
+        ctx.stroke();
+
         ctx.globalAlpha = 1;
         ctx.fillStyle = colors.head;
-        ctx.beginPath();
-        ctx.arc(hu, hv, 1.8, 0, Math.PI * 2);
-        ctx.fill();
+        for (const [a, b] of nodes) {
+            ctx.beginPath();
+            ctx.arc(a, b, 1.8, 0, Math.PI * 2);
+            ctx.fill();
+        }
+
+        // Coupling strength, when there's room for it
+        if (size >= 120) {
+            ctx.globalAlpha = 0.8;
+            ctx.fillStyle = coupled ? colors.edge : colors.line;
+            ctx.font = `10px ${colors.font}`;
+            ctx.fillText(`c = ${c.toFixed(1)}`, 4, size - 4);
+        }
     }
     requestAnimationFrame(frame);
 })();
