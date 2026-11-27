@@ -523,3 +523,214 @@ body {
     grid-template-columns: repeat(4, 1fr);
   }
 }
+
+/* ---------- 1.1 additions ---------- */
+
+/* Boot screen */
+.boot-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 5000;
+  background: #000;
+  color: var(--green);
+  padding: 32px;
+  cursor: pointer;
+}
+
+.boot-screen[hidden] {
+  display: none;
+}
+
+.boot-screen pre {
+  margin: 0;
+  font: 14px/1.6 var(--font-code);
+  white-space: pre-wrap;
+}
+
+/* Real buttons for window controls */
+button.title-bar-btn {
+  padding: 0;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+button.title-bar-btn:focus-visible,
+.win-btn:focus-visible,
+.modal-btn:focus-visible {
+  outline: 2px dashed var(--cyan);
+  outline-offset: 2px;
+}
+
+/* Window shade: collapsed to the title bar */
+.window.shaded .window-content {
+  display: none;
+}
+
+.window.shaded {
+  min-height: 0;
+}
+
+.title-bar {
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* Generic window button */
+.win-btn {
+  margin-top: 12px;
+  background: var(--current-line);
+  color: var(--foreground);
+  border: 1px solid var(--purple);
+  padding: 6px 14px;
+  font: 600 12px var(--font-code);
+  cursor: pointer;
+  box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.4);
+}
+
+.win-btn:hover {
+  background: var(--purple);
+  color: var(--bg-color);
+}
+
+.win-btn:active {
+  translate: 2px 2px;
+  box-shadow: 1px 1px 0 rgba(0, 0, 0, 0.4);
+}
+
+/* Research.pdf */
+.research-note {
+  color: var(--comment);
+  font-size: 13px;
+}
+
+.papers {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.papers li {
+  display: grid;
+  grid-template-columns: 44px 1fr;
+  column-gap: 8px;
+}
+
+.papers .year {
+  grid-row: span 2;
+  color: var(--yellow);
+  font-family: var(--font-code);
+}
+
+.papers .venue {
+  color: var(--comment);
+  font-size: 12px;
+}
+
+/* Lorenz.app */
+.lorenz-app {
+  max-height: none;
+}
+
+#lorenz-canvas {
+  display: block;
+  width: 100%;
+  height: 280px;
+  background: #1e1f29;
+  border: 1px solid var(--current-line);
+  cursor: grab;
+  touch-action: none;
+}
+
+#lorenz-canvas:active {
+  cursor: grabbing;
+}
+
+.lorenz-control {
+  display: grid;
+  grid-template-columns: 96px 1fr;
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
+  font-family: var(--font-code);
+  color: var(--pink);
+}
+
+.lorenz-control input {
+  accent-color: var(--purple);
+  width: 100%;
+}
+
+.lorenz-status {
+  margin: 8px 0 4px !important;
+  color: var(--green);
+  font-family: var(--font-code);
+  font-size: 12px;
+}
+
+.lorenz-hint {
+  margin: 0 !important;
+  color: var(--comment);
+  font-size: 12px;
+}
+
+/* Trash */
+.trash-list {
+  list-style: none;
+  font-family: var(--font-code);
+  font-size: 12px;
+}
+
+.trash-list li {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  padding: 4px 0;
+  border-bottom: 1px dashed var(--current-line);
+}
+
+.trash-list li span {
+  margin-left: auto;
+  color: var(--comment);
+}
+
+.trash-list i {
+  color: var(--cyan);
+  width: 14px;
+}
+
+.trash-list:empty::before {
+  content: 'Empty.';
+  color: var(--comment);
+}
+
+/* Terminal echo lines */
+.terminal-content .echo {
+  color: #8f8;
+  margin-bottom: 2px;
+}
+
+.terminal-content p {
+  white-space: pre-wrap;
+  margin-bottom: 6px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dice-animation {
+    animation: none;
+  }
+}
+
+@media (max-width: 700px) {
+  #lorenz-canvas {
+    height: 240px;
+  }
+
+  .boot-screen {
+    padding: 16px;
+  }
+
+  .boot-screen pre {
+    font-size: 12px;
+  }
+}

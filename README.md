@@ -41,8 +41,11 @@ the attractor needs a server.
   the system used in the 2013 negative-couplings paper. `script.js` replaces it with a canvas that integrates
   the system in 3D, spins it slowly, and traces the orbit with a bright point; you can drag it to turn it.
   With reduced motion or no JavaScript, the static SVG (a CSS mask in the accent color) stays.
-- **ZapataOS.** The green button in the header boots it. Draggable windows on desktop, stacked windows on
-  phones. Try `help` in the terminal.
+- **ZapataOS.** The green button in the header boots it (boot screen once per session; any key skips).
+  Apps: Identity, B-Sides, Research, Lorenz (3D attractor with a ρ slider), Network, Terminal, Trash.
+  Yellow button or double-click on a title bar rolls a window up, Esc closes it, View > Clean Up Windows
+  resets the layout. The terminal has history, Tab completion, `open <app>`, `roll 3d6`, `lorenz 20` and a
+  few jokes; try `help`. Windows stack on phones.
 - **Icons.** Contact icons are inline SVGs from [Font Awesome Free](https://fontawesome.com/license/free)
   (CC BY 4.0).
 

@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ZapataOS · zapata131</title>
   <meta name="robots" content="noindex">
+  <link rel="icon" href="../icons/favicon.ico">
 
   <link
     href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Inter:wght@400;600;800&display=swap"
@@ -15,6 +16,11 @@
 </head>
 
 <body>
+  <!-- Boot screen: shown once per session, any key or click skips it -->
+  <div id="boot" class="boot-screen" hidden>
+    <pre id="boot-log" aria-live="polite"></pre>
+  </div>
+
   <div class="menubar">
     <div class="menubar-item" id="menu-zapata">
       <i class="fas fa-terminal"></i> ZapataOS
@@ -32,23 +38,28 @@
         <div class="dropdown-item pattern-ctrl" data-pattern="grid">Grid Points</div>
         <div class="dropdown-item pattern-ctrl" data-pattern="slate">Classic Slate</div>
         <div class="dropdown-item pattern-ctrl" data-pattern="terminal">Terminal Black</div>
+        <div class="dropdown-divider"></div>
+        <div class="dropdown-item" id="tidy-up">Clean Up Windows</div>
       </div>
     </div>
     <div class="menubar-item">Apps
       <div class="dropdown">
-        <div class="dropdown-item" id="open-id">Identity.exe</div>
-        <div class="dropdown-item" id="open-bsides">B-Sides.log</div>
-        <div class="dropdown-item" id="open-network">Network.sh</div>
-        <div class="dropdown-item" id="open-terminal">Terminal.exe</div>
+        <div class="dropdown-item" data-open="identity">Identity.exe</div>
+        <div class="dropdown-item" data-open="bsides">B-Sides.log</div>
+        <div class="dropdown-item" data-open="research">Research.pdf</div>
+        <div class="dropdown-item" data-open="lorenz">Lorenz.app</div>
+        <div class="dropdown-item" data-open="network">Network.sh</div>
+        <div class="dropdown-item" data-open="terminal">Terminal.exe</div>
+        <div class="dropdown-divider"></div>
         <div class="dropdown-item" id="roll-dice">Dice Roller (2d6)</div>
       </div>
     </div>
-    <div class="menubar-item" style="margin-left: auto;" id="system-clock">03:25 PM</div>
+    <div class="menubar-item" style="margin-left: auto;" id="system-clock" title="Click for the date">--:--</div>
   </div>
 
   <div id="system-modal" class="modal">
-    <div class="modal-content">
-      <div class="modal-header">System Notification</div>
+    <div class="modal-content" role="alertdialog" aria-labelledby="modal-title" aria-describedby="modal-text">
+      <div class="modal-header" id="modal-title">System Notification</div>
       <div class="modal-body" id="modal-text">Welcome to ZapataOS. All systems operational.</div>
       <div class="modal-footer">
         <button class="modal-btn" id="modal-ok">OK</button>
@@ -68,9 +79,24 @@
       <div class="icon-text">B-Sides</div>
     </div>
 
-    <div class="icon" role="button" tabindex="0" data-window="socials-window" style="top: 230px; right: 30px;">
+    <div class="icon" role="button" tabindex="0" data-window="research-window" style="top: 230px; right: 30px;">
+      <i class="fas fa-file-lines"></i>
+      <div class="icon-text">Research</div>
+    </div>
+
+    <div class="icon" role="button" tabindex="0" data-window="socials-window" style="top: 330px; right: 30px;">
       <i class="fas fa-broadcast-tower"></i>
       <div class="icon-text">Network</div>
+    </div>
+
+    <div class="icon" role="button" tabindex="0" data-window="lorenz-window" style="top: 30px; right: 120px;">
+      <i class="fas fa-infinity"></i>
+      <div class="icon-text">Lorenz</div>
+    </div>
+
+    <div class="icon" role="button" tabindex="0" data-window="terminal-window" style="top: 130px; right: 120px;">
+      <i class="fas fa-terminal"></i>
+      <div class="icon-text">Terminal</div>
     </div>
 
     <div class="icon" role="button" tabindex="0" id="return-icon" style="bottom: 130px; right: 30px;">
@@ -78,28 +104,27 @@
       <div class="icon-text">Return</div>
     </div>
 
-    <div class="icon" role="button" tabindex="0" id="trash-icon" style="bottom: 30px; right: 30px;">
+    <div class="icon" role="button" tabindex="0" data-window="trash-window" id="trash-icon" style="bottom: 30px; right: 30px;">
       <i class="fas fa-trash"></i>
       <div class="icon-text">Trash</div>
     </div>
 
     <!-- Windows -->
-    <!-- Terminal Window -->
-    <div class="window" id="terminal-window" style="top: 300px; left: 600px; width: 500px; display: none;">
+    <div class="window" id="terminal-window" style="top: 300px; left: 600px; width: 520px; display: none;">
       <div class="title-bar">
         <div class="title-text">terminal.exe</div>
         <div class="title-controls">
-          <div class="title-bar-btn min-btn"></div>
-          <div class="title-bar-btn close-btn"></div>
+          <button type="button" class="title-bar-btn min-btn" aria-label="Collapse window"></button>
+          <button type="button" class="title-bar-btn close-btn" aria-label="Close window"></button>
         </div>
       </div>
       <div class="window-content terminal-content" id="terminal-output">
-        <p>ZapataOS [Version 1.0.4]</p>
+        <p>ZapataOS [Version 1.1.0]</p>
         <p>(c) 2026 Zapata Corp. All rights reserved.</p>
         <p>&nbsp;</p>
-        <p>Type 'help' to see available commands.</p>
+        <p>Type 'help' to see available commands. Tab completes, arrow keys recall.</p>
         <div class="terminal-input-line">
-          <span>z:\></span>
+          <span>z:\&gt;</span>
           <input type="text" id="terminal-input" aria-label="Terminal command" autocomplete="off" autocapitalize="off" spellcheck="false">
         </div>
       </div>
@@ -109,17 +134,17 @@
       <div class="title-bar">
         <div class="title-text">Identity.exe</div>
         <div class="title-controls">
-          <div class="title-bar-btn min-btn"></div>
-          <div class="title-bar-btn close-btn"></div>
+          <button type="button" class="title-bar-btn min-btn" aria-label="Collapse window"></button>
+          <button type="button" class="title-bar-btn close-btn" aria-label="Close window"></button>
         </div>
       </div>
       <div class="window-content bio">
         <p>I'm <strong>José Luis Zapata</strong> (but my friends just call me "Zapata"), a tech writer born and raised
           in Mexico and living in Germany.</p>
         <div class="role-list">
-          <span>> Technical Writer</span>
-          <span>> Researcher</span>
-          <span>> Board Games Fan</span>
+          <span>&gt; Technical Writer</span>
+          <span>&gt; Researcher</span>
+          <span>&gt; Board Games Fan</span>
         </div>
         <p>I currently work for <strong>Google Germany</strong>, write about my (mis)adventures as a tech writer at <a
             href="https://bufferbuffer.com" target="_blank" rel="noopener noreferrer">BufferBuffer</a>, maintain <a
@@ -133,8 +158,8 @@
       <div class="title-bar">
         <div class="title-text">B-Sides.log</div>
         <div class="title-controls">
-          <div class="title-bar-btn min-btn"></div>
-          <div class="title-bar-btn close-btn"></div>
+          <button type="button" class="title-bar-btn min-btn" aria-label="Collapse window"></button>
+          <button type="button" class="title-bar-btn close-btn" aria-label="Close window"></button>
         </div>
       </div>
       <div class="window-content projects-list">
@@ -167,13 +192,63 @@
           <p>Board game reviews and analysis, in Spanish.</p>
         </div>
         <div class="project-item">
-          <h3><a href="https://doi.org/10.3390/math8111939" target="_blank" rel="noopener">Synchronization in evolving networks (2020)</a></h3>
-          <p>Mathematics 8(11). With Solís-Perales and Obregón-Pulido.</p>
-        </div>
-        <div class="project-item">
           <h3><a href="https://github.com/zapata131/sweet16" target="_blank" rel="noopener">sweet16</a></h3>
           <p>QMK layers for a 16-key macropad: macOS, DaVinci Resolve, Affinity Designer.</p>
         </div>
+      </div>
+    </div>
+
+    <div class="window" id="research-window" style="top: 110px; left: 220px; width: 460px; display: none;">
+      <div class="title-bar">
+        <div class="title-text">Research.pdf</div>
+        <div class="title-controls">
+          <button type="button" class="title-bar-btn min-btn" aria-label="Collapse window"></button>
+          <button type="button" class="title-bar-btn close-btn" aria-label="Close window"></button>
+        </div>
+      </div>
+      <div class="window-content research">
+        <p class="research-note">Universidad de Guadalajara, before Google. Synchronization of complex networks,
+          mostly the cases where it shouldn't work.</p>
+        <ol class="papers">
+          <li>
+            <span class="year">2020</span>
+            <a href="https://doi.org/10.3390/math8111939" target="_blank" rel="noopener">Synchronization in
+              Time-Varying and Evolving Complex Networks</a>
+            <span class="venue">Mathematics 8(11), 1939. Solís-Perales, Zapata, Obregón-Pulido.</span>
+          </li>
+          <li>
+            <span class="year">2013</span>
+            <a href="https://github.com/zapata131/simulation-chaotic-systems-negative-couplings" target="_blank"
+              rel="noopener">Synchronization of Complex Networks with Negative Couplings</a>
+            <span class="venue">PHYSCON 2013, San Luis Potosí. Solís-Perales, Zapata. Link: Python reproduction.</span>
+          </li>
+          <li>
+            <span class="year">2026</span>
+            <a href="https://github.com/zapata131/simulation-synchronization-network-inhibitory-neurons" target="_blank"
+              rel="noopener">Inhibitory neurons, revisited</a>
+            <span class="venue">The 2013 result on 100-node networks that follow Dale's law.</span>
+          </li>
+        </ol>
+        <button type="button" class="win-btn" data-open="lorenz">Open Lorenz.app</button>
+      </div>
+    </div>
+
+    <div class="window" id="lorenz-window" style="top: 70px; left: 520px; width: 380px; display: none;">
+      <div class="title-bar">
+        <div class="title-text">Lorenz.app</div>
+        <div class="title-controls">
+          <button type="button" class="title-bar-btn min-btn" aria-label="Collapse window"></button>
+          <button type="button" class="title-bar-btn close-btn" aria-label="Close window"></button>
+        </div>
+      </div>
+      <div class="window-content lorenz-app">
+        <canvas id="lorenz-canvas" width="340" height="300" aria-label="Lorenz attractor, drag to rotate"></canvas>
+        <label class="lorenz-control">
+          <span>ρ = <output id="rho-out">28.0</output></span>
+          <input type="range" id="rho" min="0" max="60" step="0.5" value="28">
+        </label>
+        <p class="lorenz-status" id="lorenz-status">Chaos. Two wings, never the same loop twice.</p>
+        <p class="lorenz-hint">σ = 10, β = 8/3. Drag to rotate. Below ρ ≈ 24.74 the orbit settles down.</p>
       </div>
     </div>
 
@@ -181,8 +256,8 @@
       <div class="title-bar">
         <div class="title-text">Network.sh</div>
         <div class="title-controls">
-          <div class="title-bar-btn min-btn"></div>
-          <div class="title-bar-btn close-btn"></div>
+          <button type="button" class="title-bar-btn min-btn" aria-label="Collapse window"></button>
+          <button type="button" class="title-bar-btn close-btn" aria-label="Close window"></button>
         </div>
       </div>
       <div class="window-content socials-grid">
@@ -197,6 +272,26 @@
         <a href="https://instagram.com/zapata131" aria-label="Instagram" title="Instagram"><i
             class="fab fa-instagram"></i></a>
         <a href="mailto:joseluis@zapata131.com" aria-label="Email" title="Email"><i class="fas fa-envelope"></i></a>
+      </div>
+    </div>
+
+    <div class="window" id="trash-window" style="top: 220px; left: 360px; width: 340px; display: none;">
+      <div class="title-bar">
+        <div class="title-text">Trash</div>
+        <div class="title-controls">
+          <button type="button" class="title-bar-btn min-btn" aria-label="Collapse window"></button>
+          <button type="button" class="title-bar-btn close-btn" aria-label="Close window"></button>
+        </div>
+      </div>
+      <div class="window-content trash">
+        <ul class="trash-list" id="trash-list">
+          <li><i class="far fa-file-code"></i> glassmorphism-v2.css <span>2026-02</span></li>
+          <li><i class="far fa-file-code"></i> geocities-mode.html <span>2026-02</span></li>
+          <li><i class="far fa-folder"></i> fontawesome-local/ <span>2026-02</span></li>
+          <li><i class="far fa-file"></i> landing-page-v1.html <span>2025</span></li>
+          <li><i class="far fa-file-lines"></i> docs-final-FINAL-v3.md <span>2019</span></li>
+        </ul>
+        <button type="button" class="win-btn" id="empty-trash">Empty Trash</button>
       </div>
     </div>
   </div>
