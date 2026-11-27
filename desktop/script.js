@@ -15,6 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
     network: 'socials-window',
     terminal: 'terminal-window',
     trash: 'trash-window',
+    dice: 'dice-window',
   };
 
   const defaults = {
@@ -243,13 +244,74 @@ document.addEventListener('DOMContentLoaded', () => {
     return { dice, total: dice.reduce((a, b) => a + b, 0) };
   }
 
-  $('roll-dice').addEventListener('click', () => {
-    showModal('');
-    modalText.innerHTML = '<div class="dice-animation">🎲 🎲</div>';
-    setTimeout(() => {
-      const { dice, total } = roll();
-      modalText.innerText = `You rolled a ${dice[0]} and a ${dice[1]}.\nTotal: ${total}${total === 7 ? '\nThe robber moves. Sorry.' : ''}`;
-    }, reduced.matches ? 0 : 900);
+  // ---------- Dice.app ----------
+  const diceTray = $('dice-tray');
+  const diceMsg = $('dice-msg');
+  const faces = ['', '⚀', '⚁', '⚂', '⚃', '⚄', '⚅'];
+  const catanSums = Array(13).fill(0);
+  let lastRoll = '2d6';
+
+  const catanLines = {
+    7: 'The robber moves. Sorry about your wheat.',
+    2: 'Snake eyes. Nobody built on the 2.',
+    12: 'Boxcars. Someone on the 12 is very smug.',
+    6: 'A 6. Good for whoever has the red number.',
+    8: 'An 8. The other red number pays out.',
+  };
+
+  function rollDice(spec) {
+    const m = /^(\d{1,2})d(\d{1,3})$/.exec(spec);
+    if (!m) return;
+    lastRoll = spec;
+    const n = +m[1], sides = +m[2];
+    const { dice, total } = roll(n, sides);
+
+    diceTray.replaceChildren(...dice.map(v => {
+      const d = document.createElement('span');
+      d.className = sides === 6 ? 'die d6' : 'die';
+      d.textContent = sides === 6 ? faces[v] : v;
+      d.title = String(v);
+      if (!reduced.matches) d.animate(
+        [{ transform: 'rotate(-25deg) scale(0.6)', opacity: 0 }, { transform: 'rotate(8deg) scale(1.08)' }, { transform: 'none', opacity: 1 }],
+        { duration: 260, easing: 'cubic-bezier(0.22, 1, 0.36, 1)' });
+      return d;
+    }), Object.assign(document.createElement('span'), { className: 'dice-total', textContent: n > 1 ? `= ${total}` : '' }));
+
+    diceMsg.className = 'dice-msg';
+    diceMsg.textContent = '';
+    if (spec === '2d6') {
+      diceMsg.textContent = catanLines[total] ?? '';
+      if (total === 7) diceMsg.classList.add('robber');
+      catanSums[total]++;
+      renderHist();
+    } else if (spec === '1d20') {
+      diceMsg.textContent = total === 20 ? 'Natural 20.' : total === 1 ? 'Natural 1. Ouch.' : '';
+    }
+  }
+
+  function renderHist() {
+    const count = catanSums.reduce((a, b) => a + b, 0);
+    const max = Math.max(...catanSums);
+    $('dice-stats').hidden = false;
+    $('dice-count').textContent = count;
+    $('dice-hist').replaceChildren(...catanSums.slice(2).map((c, i) => {
+      const col = document.createElement('div');
+      col.className = 'bar' + (i + 2 === 7 ? ' seven' : '');
+      col.innerHTML = `<span style="height:${max ? (c / max) * 100 : 0}%"></span><b>${i + 2}</b>`;
+      col.title = `${i + 2}: ${c}`;
+      return col;
+    }));
+  }
+
+  document.querySelectorAll('[data-roll]').forEach(b => b.addEventListener('click', () => rollDice(b.dataset.roll)));
+
+  $('dice-window').addEventListener('keydown', (e) => {
+    if (e.key === ' ' && e.target.tagName !== 'BUTTON') { e.preventDefault(); rollDice(lastRoll); }
+  });
+  document.addEventListener('keydown', (e) => {
+    const win = $('dice-window');
+    if (e.key === ' ' && win.classList.contains('active') && win.style.display !== 'none'
+      && e.target === document.body) { e.preventDefault(); rollDice(lastRoll); }
   });
 
   // ---------- Desktop pattern (remembered) ----------
@@ -303,6 +365,7 @@ document.addEventListener('DOMContentLoaded', () => {
       'contact           email',
       'roll [NdM]        roll dice, e.g. roll 3d6',
       'lorenz [rho]      open Lorenz.app, optionally with rho',
+      'catan             roll 2d6 in Dice.app',
       'pattern <name>    dither, grid, slate, terminal',
       'date, clear, reboot, exit',
     ].join('\n'),
@@ -337,6 +400,7 @@ document.addEventListener('DOMContentLoaded', () => {
     date: () => new Date().toString(),
     hack: () => 'Bypassing firewalls... Accessing mainframe... [ACCESS DENIED]\nNice try.',
     sudo: () => 'Zapata is not in the sudoers file. This incident will be reported.',
+    catan: () => { openWindow(apps.dice); rollDice('2d6'); return `Rolled 2d6 in Dice.app: ${diceTray.textContent.trim()}`; },
     matatena: () => 'Board game reviews in Spanish: la-matatena.com',
     reboot: () => { setTimeout(() => $('reboot-os').click(), 300); return 'Rebooting...'; },
     exit: () => { setTimeout(exitAction, 300); return 'Bye.'; },

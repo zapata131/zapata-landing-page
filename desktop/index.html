@@ -51,7 +51,7 @@
         <div class="dropdown-item" data-open="network">Network.sh</div>
         <div class="dropdown-item" data-open="terminal">Terminal.exe</div>
         <div class="dropdown-divider"></div>
-        <div class="dropdown-item" id="roll-dice">Dice Roller (2d6)</div>
+        <div class="dropdown-item" data-open="dice">Dice.app</div>
       </div>
     </div>
     <div class="menubar-item" style="margin-left: auto;" id="system-clock" title="Click for the date">--:--</div>
@@ -97,6 +97,11 @@
     <div class="icon" role="button" tabindex="0" data-window="terminal-window" style="top: 130px; right: 120px;">
       <i class="fas fa-terminal"></i>
       <div class="icon-text">Terminal</div>
+    </div>
+
+    <div class="icon" role="button" tabindex="0" data-window="dice-window" style="top: 230px; right: 120px;">
+      <i class="fas fa-dice"></i>
+      <div class="icon-text">Dice</div>
     </div>
 
     <div class="icon" role="button" tabindex="0" id="return-icon" style="bottom: 130px; right: 30px;">
@@ -249,6 +254,32 @@
         </label>
         <p class="lorenz-status" id="lorenz-status">Chaos. Two wings, never the same loop twice.</p>
         <p class="lorenz-hint">σ = 10, β = 8/3. Drag to rotate. Below ρ ≈ 24.74 the orbit settles down.</p>
+      </div>
+    </div>
+
+    <div class="window" id="dice-window" style="top: 90px; left: 560px; width: 340px; display: none;">
+      <div class="title-bar">
+        <div class="title-text">Dice.app</div>
+        <div class="title-controls">
+          <button type="button" class="title-bar-btn min-btn" aria-label="Collapse window"></button>
+          <button type="button" class="title-bar-btn close-btn" aria-label="Close window"></button>
+        </div>
+      </div>
+      <div class="window-content dice-app">
+        <div class="dice-presets">
+          <button type="button" class="win-btn" data-roll="2d6">2d6 Catan</button>
+          <button type="button" class="win-btn" data-roll="1d6">1d6</button>
+          <button type="button" class="win-btn" data-roll="3d6">3d6</button>
+          <button type="button" class="win-btn" data-roll="1d20">1d20</button>
+        </div>
+        <div class="dice-tray" id="dice-tray" aria-live="polite">
+          <p class="dice-empty">Pick a roll. Space rolls again.</p>
+        </div>
+        <p class="dice-msg" id="dice-msg"></p>
+        <div class="dice-stats" id="dice-stats" hidden>
+          <p class="dice-stats-title">2d6 rolls this session: <span id="dice-count">0</span></p>
+          <div class="dice-hist" id="dice-hist"></div>
+        </div>
       </div>
     </div>
 

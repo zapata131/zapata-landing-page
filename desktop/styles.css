@@ -734,3 +734,114 @@ button.title-bar-btn:focus-visible,
     font-size: 12px;
   }
 }
+
+/* Dice.app */
+.dice-presets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.dice-presets .win-btn {
+  margin-top: 0;
+}
+
+.dice-tray {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  min-height: 96px;
+  margin: 16px 0 8px;
+  padding: 12px;
+  background: #1e1f29;
+  border: 1px solid var(--current-line);
+}
+
+.dice-empty {
+  margin: 0 !important;
+  color: var(--comment);
+  font-family: var(--font-code);
+  font-size: 12px;
+}
+
+.die {
+  display: grid;
+  place-items: center;
+  min-width: 56px;
+  height: 56px;
+  padding: 0 8px;
+  border: 2px solid var(--foreground);
+  border-radius: 8px;
+  color: var(--foreground);
+  font: 600 24px var(--font-code);
+  box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.5);
+}
+
+.die.d6 {
+  border: 0;
+  box-shadow: none;
+  min-width: 0;
+  padding: 0;
+  height: auto;
+  font-size: 72px;
+  line-height: 1;
+  font-family: system-ui, sans-serif;
+}
+
+.dice-total {
+  color: var(--yellow);
+  font: 600 28px var(--font-code);
+}
+
+.dice-msg {
+  min-height: 20px;
+  margin: 0 0 8px !important;
+  color: var(--green);
+  font-family: var(--font-code);
+  font-size: 13px;
+}
+
+.dice-msg.robber {
+  color: var(--red);
+  font-weight: 600;
+}
+
+.dice-stats-title {
+  margin: 0 0 6px !important;
+  color: var(--comment);
+  font-size: 12px;
+}
+
+.dice-hist {
+  display: grid;
+  grid-template-columns: repeat(11, 1fr);
+  gap: 4px;
+  height: 72px;
+}
+
+.dice-hist .bar {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: stretch;
+  gap: 2px;
+  min-width: 0;
+}
+
+.dice-hist .bar span {
+  background: var(--purple);
+  min-height: 1px;
+  transition: height 200ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.dice-hist .bar.seven span {
+  background: var(--red);
+}
+
+.dice-hist .bar b {
+  font: 400 10px var(--font-code);
+  color: var(--comment);
+  text-align: center;
+}
