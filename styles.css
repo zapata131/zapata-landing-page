@@ -441,3 +441,39 @@ h2 span {
 .col {
   min-width: 0;
 }
+
+/* Live 3D version drawn by script.js */
+.lorenz.live {
+  -webkit-mask: none;
+  mask: none;
+  background: none;
+  opacity: 1;
+  aspect-ratio: 1;
+  width: 120px;
+  top: -16px;
+  pointer-events: auto;
+  cursor: grab;
+  touch-action: none;
+}
+
+.lorenz.live:active {
+  cursor: grabbing;
+}
+
+.lorenz canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+@media (max-width: 720px) {
+  .lorenz.live {
+    width: 80px;
+    top: -8px;
+  }
+}
+
+.lorenz {
+  color: var(--purple);
+  border: 0 solid var(--pink);
+}

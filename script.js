@@ -75,3 +75,117 @@ if (box) {
     box.textContent = `// “${q.text}”` + (q.author === 'Unknown' ? '' : ` — ${q.author}`);
     box.hidden = false;
 }
+
+// Lorenz attractor in 3D: slow spin, a bright point retracing the orbit, drag to turn it.
+// Without JS (or with reduced motion) the static SVG mask from the CSS stays.
+(() => {
+    const host = document.querySelector('.lorenz');
+    if (!host || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    // Integrate once (RK4, sigma 10, rho 28, beta 8/3), keep ~4000 points.
+    const pts = [];
+    let x = 1, y = 1, z = 1;
+    const h = 0.006, f = (x, y, z) => [10 * (y - x), x * (28 - z) - y, x * y - (8 / 3) * z];
+    for (let i = 0; i < 12500; i++) {
+        const k1 = f(x, y, z);
+        const k2 = f(x + h / 2 * k1[0], y + h / 2 * k1[1], z + h / 2 * k1[2]);
+        const k3 = f(x + h / 2 * k2[0], y + h / 2 * k2[1], z + h / 2 * k2[2]);
+        const k4 = f(x + h * k3[0], y + h * k3[1], z + h * k3[2]);
+        x += h / 6 * (k1[0] + 2 * k2[0] + 2 * k3[0] + k4[0]);
+        y += h / 6 * (k1[1] + 2 * k2[1] + 2 * k3[1] + k4[1]);
+        z += h / 6 * (k1[2] + 2 * k2[2] + 2 * k3[2] + k4[2]);
+        if (i > 500 && i % 3 === 0) pts.push([x, y, z - 25]);
+    }
+
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    host.append(canvas);
+    host.classList.add('live');
+
+    let size = 0, dpr = 1;
+    function resize() {
+        dpr = Math.min(devicePixelRatio || 1, 2);
+        size = host.clientWidth;
+        canvas.width = canvas.height = Math.round(size * dpr);
+    }
+    resize();
+    addEventListener('resize', resize);
+
+    let colors = {};
+    function readColors() {
+        // Read resolved colors from the host (the custom properties hold light-dark(), which canvas can't parse)
+        const cs = getComputedStyle(host);
+        colors = { line: cs.color, head: cs.borderTopColor };
+    }
+    readColors();
+    new MutationObserver(readColors).observe(document.head, { subtree: true, attributes: true });
+    matchMedia('(prefers-color-scheme: dark)').addEventListener('change', readColors);
+
+    let yaw = -0.7, pitch = -0.3, spin = 0.0035, head = 0, dragging = null;
+
+    canvas.addEventListener('pointerdown', (e) => {
+        dragging = { x: e.clientX, y: e.clientY, yaw, pitch };
+        canvas.setPointerCapture(e.pointerId);
+    });
+    canvas.addEventListener('pointermove', (e) => {
+        if (!dragging || !canvas.hasPointerCapture(e.pointerId)) return;
+        yaw = dragging.yaw + (e.clientX - dragging.x) * 0.02;
+        pitch = Math.max(-1.3, Math.min(1.3, dragging.pitch + (e.clientY - dragging.y) * 0.02));
+    });
+    canvas.addEventListener('lostpointercapture', () => { dragging = null; });
+
+    function project(p, cy, sy, cp, sp, s) {
+        const X = p[0] * cy - p[1] * sy;
+        const D = p[0] * sy + p[1] * cy;
+        const Y = p[2] * cp - D * sp;
+        return [size / 2 + X * s, size / 2 - Y * s];
+    }
+
+    let visible = true;
+    new IntersectionObserver(([e]) => { visible = e.isIntersecting; }).observe(host);
+
+    function frame() {
+        requestAnimationFrame(frame);
+        if (!visible) return;
+        if (!dragging) yaw += spin;
+        head = (head + 3) % pts.length;
+
+        const s = size / 64, cy = Math.cos(yaw), sy = Math.sin(yaw), cp = Math.cos(pitch), sp = Math.sin(pitch);
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        ctx.clearRect(0, 0, size, size);
+        ctx.lineJoin = 'round';
+
+        // Whole attractor, faint
+        ctx.globalAlpha = 0.45;
+        ctx.strokeStyle = colors.line;
+        ctx.lineWidth = 0.5;
+        ctx.beginPath();
+        pts.forEach((p, i) => {
+            const [u, v] = project(p, cy, sy, cp, sp, s);
+            i ? ctx.lineTo(u, v) : ctx.moveTo(u, v);
+        });
+        ctx.stroke();
+
+        // Bright tail following the orbit
+        const tail = 140;
+        ctx.strokeStyle = colors.head;
+        ctx.lineWidth = 1.2;
+        for (let i = tail; i > 0; i -= 10) {
+            ctx.globalAlpha = 1 - i / tail;
+            ctx.beginPath();
+            for (let j = Math.max(0, i - 11); j <= i; j++) {
+                const p = pts[(head - j + pts.length) % pts.length];
+                const [u, v] = project(p, cy, sy, cp, sp, s);
+                j === Math.max(0, i - 11) ? ctx.moveTo(u, v) : ctx.lineTo(u, v);
+            }
+            ctx.stroke();
+        }
+        const [hu, hv] = project(pts[head], cy, sy, cp, sp, s);
+        ctx.globalAlpha = 1;
+        ctx.fillStyle = colors.head;
+        ctx.beginPath();
+        ctx.arc(hu, hv, 1.8, 0, Math.PI * 2);
+        ctx.fill();
+    }
+    requestAnimationFrame(frame);
+})();

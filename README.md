@@ -38,8 +38,9 @@ the attractor needs a server.
 - **Languages.** Edit both `index.html` and `es/index.html` when content changes. They point to each other with
   `hreflang` links.
 - **The drawing.** `assets/lorenz.svg` is the x–z projection of a Lorenz attractor (σ = 10, ρ = 28, β = 8/3),
-  the system used in the 2013 negative-couplings paper. CSS uses it as a mask so it takes the accent color in
-  both themes.
+  the system used in the 2013 negative-couplings paper. `script.js` replaces it with a canvas that integrates
+  the system in 3D, spins it slowly, and traces the orbit with a bright point; you can drag it to turn it.
+  With reduced motion or no JavaScript, the static SVG (a CSS mask in the accent color) stays.
 - **ZapataOS.** The green button in the header boots it. Draggable windows on desktop, stacked windows on
   phones. Try `help` in the terminal.
 - **Icons.** Contact icons are inline SVGs from [Font Awesome Free](https://fontawesome.com/license/free)
