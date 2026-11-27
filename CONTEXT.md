@@ -7,7 +7,9 @@ Former professor and researcher at the Universidad de Guadalajara (synchronizati
 
 - **Work**: Chrome for Developers author page, https://developer.chrome.com/authors/zapata
 - **Writing**: BufferBuffer (bufferbuffer.com), technicalwriting.link (repo `tw-links`)
-- **Projects**: el Meeple (elmeeple.com, with La Matatena), Shelf Shuffler (`shelf-shuffle`), La Matatena
+- **Projects**: el Meeple (elmeeple.com, board game price comparator for Mexico, with La Matatena),
+  MTTN AutoSubs and MTTN PaperCraft Studio (github.com/la-matatena, DaVinci Resolve tools),
+  Shelf Shuffler (`shelf-shuffle`), La Matatena
 - **Research**:
   - Solís-Perales, Zapata, Obregón-Pulido. "Synchronization in Time-Varying and Evolving Complex Networks."
     *Mathematics* 8(11), 1939, 2020. doi:10.3390/math8111939

@@ -437,3 +437,7 @@ h2 span {
 .caret {
   margin-right: 1ch;
 }
+
+.col {
+  min-width: 0;
+}

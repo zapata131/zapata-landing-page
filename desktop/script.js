@@ -130,7 +130,7 @@ document.addEventListener('DOMContentLoaded', () => {
       let response = '';
       if (cmd === 'help') response = 'Available commands: help, whoami, ls, projects, papers, docs, contact, clear, hack, date';
       else if (cmd === 'whoami') response = 'User: Zapata | Permissions: Superuser | Role: Technical Writer';
-      else if (cmd === 'projects') response = 'el Meeple (elmeeple.com), Shelf Shuffler, technicalwriting.link, BufferBuffer, La Matatena. Open B-Sides.log for links.';
+      else if (cmd === 'projects') response = 'el Meeple (elmeeple.com), MTTN AutoSubs, MTTN PaperCraft Studio, Shelf Shuffler, technicalwriting.link, BufferBuffer, La Matatena. Open B-Sides.log for links.';
       else if (cmd === 'papers') response = '2020  Synchronization in Time-Varying and Evolving Complex Networks. Mathematics 8(11).\n2013  Synchronization of Complex Networks with Negative Couplings. PHYSCON 2013.';
       else if (cmd === 'docs') response = 'developer.chrome.com/authors/zapata';
       else if (cmd === 'contact') response = 'joseluis@zapata131.com';
