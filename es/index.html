@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <script>
+    try { document.querySelector('meta[name="color-scheme"]').content = localStorage.getItem('color-scheme') ?? 'light dark'; } catch (e) {}
+  </script>
+  <title>José Luis Zapata · Technical writer</title>
+  <meta name="description"
+    content="José Luis Zapata (zapata131): technical writer en Google en Múnich, antes investigador en redes complejas, y jugador de juegos de mesa.">
+  <link rel="canonical" href="https://zapata131.com/es/">
+  <link rel="alternate" hreflang="en" href="https://zapata131.com/">
+  <link rel="alternate" hreflang="es" href="https://zapata131.com/es/">
+  <link rel="alternate" hreflang="x-default" href="https://zapata131.com/">
+
+  <meta property="og:type" content="profile">
+  <meta property="og:title" content="José Luis Zapata · Technical writer">
+  <meta property="og:description"
+    content="Technical writer en Google en Múnich. Antes, investigador en redes complejas. Y juegos de mesa.">
+  <meta property="og:url" content="https://zapata131.com/es/">
+  <meta property="og:image" content="https://zapata131.com/assets/og.png">
+  <meta property="og:locale" content="es_MX">
+  <meta property="og:locale:alternate" content="en_US">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <link rel="icon" href="../icons/favicon.ico">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Newsreader:opsz,wght@6..72,400;6..72,500&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="../styles.css">
+</head>
+
+<body>
+  <main class="page">
+    <header class="intro">
+      <div class="lorenz" aria-hidden="true"></div>
+      <h1>José Luis Zapata</h1>
+      <p class="lede">
+        Technical writer en Google, en Múnich. Antes fui profesor e investigador en la Universidad de Guadalajara;
+        estudiaba cómo se sincronizan las redes de sistemas caóticos.
+      </p>
+      <p>
+        Nací y crecí en México. Casi todos me dicen Zapata.
+      </p>
+    </header>
+
+    <section aria-labelledby="h-work">
+      <h2 id="h-work">Trabajo</h2>
+      <ul class="list">
+        <li>
+          <a href="https://developer.chrome.com/authors/zapata" hreflang="en">Chrome for Developers</a>
+          <span class="meta">Google</span>
+          <p>La documentación que he escrito, editado o revisado, en mi página de autor (en inglés).</p>
+        </li>
+      </ul>
+    </section>
+
+    <section aria-labelledby="h-writing">
+      <h2 id="h-writing">Escritura</h2>
+      <ul class="list">
+        <li>
+          <a href="https://bufferbuffer.com" hreflang="en">BufferBuffer</a>
+          <span class="meta">Blog, en inglés</span>
+          <p>Las (des)venturas de un technical writer. Para empezar: “Minimum Viable Documentation”.</p>
+        </li>
+        <li>
+          <a href="https://technicalwriting.link" hreflang="en">technicalwriting.link</a>
+          <span class="meta">Desde 2022</span>
+          <p>Blogs, libros, cursos y videos para technical writers. Una GitHub Action revisa cada enlace para que la
+            lista no se pudra.</p>
+        </li>
+      </ul>
+    </section>
+
+    <section aria-labelledby="h-projects">
+      <h2 id="h-projects">Proyectos</h2>
+      <ul class="list">
+        <li>
+          <a href="https://elmeeple.com">el Meeple</a>
+          <span class="meta">Next.js · Supabase</span>
+          <p>Un mapa de cafés de juegos de mesa y tiendas de TCG en Latinoamérica y España. Lo hicimos con La
+            Matatena.</p>
+        </li>
+        <li>
+          <a href="https://github.com/zapata131/shelf-shuffle">Shelf Shuffler</a>
+          <span class="meta">Next.js</span>
+          <p>Convierte tu colección de BoardGameGeek en cartas de referencia para imprimir, nueve por hoja A4.</p>
+        </li>
+        <li>
+          <a href="https://la-matatena.com">La Matatena</a>
+          <span class="meta">YouTube</span>
+          <p>Reseñas y análisis de juegos de mesa, con mi esposa.</p>
+        </li>
+      </ul>
+    </section>
+
+    <section aria-labelledby="h-research">
+      <h2 id="h-research">Investigación</h2>
+      <ul class="list">
+        <li>
+          <a href="https://doi.org/10.3390/math8111939" hreflang="en" lang="en">Synchronization in time-varying and
+            evolving complex networks</a>
+          <span class="meta">2020</span>
+          <p><cite>Mathematics</cite> 8(11), 1939. Con G. Solís-Perales y G. Obregón-Pulido.</p>
+        </li>
+        <li>
+          <a href="https://github.com/zapata131/simulation-chaotic-systems-negative-couplings" hreflang="en"
+            lang="en">Synchronization of complex networks with negative couplings</a>
+          <span class="meta">2013</span>
+          <p>PHYSCON 2013, San Luis Potosí. Con G. Solís-Perales. El enlace lleva a una reproducción en Python de la
+            red de Lorenz del artículo.</p>
+        </li>
+        <li>
+          <a href="https://github.com/zapata131/simulation-synchronization-network-inhibitory-neurons"
+            hreflang="en">Neuronas inhibitorias, de vuelta</a>
+          <span class="meta">2026</span>
+          <p>El resultado de 2013 aplicado a redes neuronales de 100 nodos que siguen la ley de Dale, con 20 % de nodos
+            inhibitorios.</p>
+        </li>
+      </ul>
+    </section>
+
+    <footer class="footer">
+      <nav class="contact" aria-label="En otros lados">
+        <a href="mailto:joseluis@zapata131.com">Correo</a>
+        <a href="https://github.com/zapata131">GitHub</a>
+        <a href="https://www.linkedin.com/in/zapata131/">LinkedIn</a>
+        <a href="https://bsky.app/profile/zapata131.bsky.social">Bluesky</a>
+        <a href="https://instagram.com/zapata131">Instagram</a>
+      </nav>
+
+      <blockquote id="quote" class="quote" lang="en" hidden></blockquote>
+
+      <div class="colophon">
+        <span>Actualizado en noviembre de 2026</span>
+        <a href="../" hreflang="en" lang="en">English</a>
+        <button type="button" class="theme-toggle" hidden>
+          <span class="to-dark">Tema oscuro</span><span class="to-light">Tema claro</span>
+        </button>
+        <a href="../desktop/" class="os-link">Arrancar ZapataOS</a>
+      </div>
+    </footer>
+  </main>
+
+  <script src="../script.js" defer></script>
+</body>
+
+</html>

@@ -1,47 +1,35 @@
-const toggleButton = document.getElementById('theme-toggle');
-const body = document.body;
-const icon = toggleButton.querySelector('i');
+// Theme: follow the system; the footer button flips what you see right now.
+// Stored only when it differs from the system, so "undo" goes back to following it.
+const meta = document.querySelector('meta[name="color-scheme"]');
+const toggle = document.querySelector('.theme-toggle');
+const systemDark = matchMedia('(prefers-color-scheme: dark)');
 
-// Check for saved user preference, if any, on load of the website
-const savedTheme = localStorage.getItem('theme');
-const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-
-// Default to dark if no preference or if system prefers dark
-if (savedTheme === 'light') {
-    enableLightMode();
-} else {
-    enableDarkMode();
+function rendered() {
+    return meta.content === 'light dark' ? (systemDark.matches ? 'dark' : 'light') : meta.content;
 }
 
-toggleButton.addEventListener('click', () => {
-    if (body.classList.contains('light-mode')) {
-        enableDarkMode();
-        localStorage.setItem('theme', 'dark');
-    } else {
-        enableLightMode();
-        localStorage.setItem('theme', 'light');
-    }
+function apply(value) {
+    meta.content = value ?? 'light dark';
+}
+
+if (toggle) {
+    toggle.hidden = false;
+    toggle.addEventListener('click', () => {
+        const target = rendered() === 'dark' ? 'light' : 'dark';
+        const system = systemDark.matches ? 'dark' : 'light';
+        try {
+            if (target === system) localStorage.removeItem('color-scheme');
+            else localStorage.setItem('color-scheme', target);
+        } catch (e) { /* storage blocked: still switch for this visit */ }
+        apply(target === system ? null : target);
+    });
+}
+
+addEventListener('storage', (e) => {
+    if (e.key === 'color-scheme') apply(e.newValue);
 });
 
-function enableLightMode() {
-    body.classList.add('light-mode');
-    icon.classList.remove('fa-moon');
-    icon.classList.add('fa-sun');
-}
-
-function enableDarkMode() {
-    body.classList.remove('light-mode');
-    icon.classList.remove('fa-sun');
-    icon.classList.add('fa-moon');
-}
-
-// Easter Egg: Redirect to ZapataOS
-const easterEggTrigger = document.getElementById('easter-egg-trigger');
-easterEggTrigger.addEventListener('click', () => {
-    window.location.href = 'desktop/index.html';
-});
-
-// Random Quote Footer
+// One random quote in the footer.
 const quotes = [
     { text: "Everything is a game. It's just a matter of whether you're playing it or it's playing you.", author: "Unknown" },
     { text: "When playing a game, the goal is to win, but it is the goal that is important, not the winning.", author: "Reiner Knizia" },
@@ -81,15 +69,14 @@ const quotes = [
     { text: "Board games: because sometimes, 'I'm bored' just means 'I need more dice.'", author: "Unknown" }
 ];
 
-function displayRandomQuote() {
-    const quoteText = document.getElementById('quote-text');
-    if (quoteText) {
-        const randomIndex = Math.floor(Math.random() * quotes.length);
-        const quote = quotes[randomIndex];
-        quoteText.innerHTML = `"${quote.text}"<br><cite>— ${quote.author}</cite>`;
-    }
+const box = document.getElementById('quote');
+if (box) {
+    const q = quotes[Math.floor(Math.random() * quotes.length)];
+    const text = document.createElement('p');
+    text.style.margin = '0';
+    text.textContent = `“${q.text}”`;
+    const by = document.createElement('footer');
+    by.textContent = q.author;
+    box.replaceChildren(text, ...(q.author === 'Unknown' ? [] : [by]));
+    box.hidden = false;
 }
-
-// Initialize
-document.addEventListener('DOMContentLoaded', displayRandomQuote);
-window.addEventListener('load', displayRandomQuote); // Backup

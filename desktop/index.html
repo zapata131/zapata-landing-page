@@ -4,7 +4,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>zapata131 | Mac OS 7 Desktop Mode</title>
+  <title>ZapataOS · zapata131</title>
+  <meta name="robots" content="noindex">
 
   <link
     href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Inter:wght@400;600;800&display=swap"
@@ -20,16 +21,9 @@
       <div class="dropdown">
         <div class="dropdown-item" id="about-os">About ZapataOS...</div>
         <div class="dropdown-divider"></div>
-        <div class="dropdown-item">Settings</div>
         <div class="dropdown-item" id="reboot-os">Reboot...</div>
         <div class="dropdown-divider"></div>
         <div class="dropdown-item" id="exit-os">Exit ZapataOS</div>
-      </div>
-    </div>
-    <div class="menubar-item">System
-      <div class="dropdown">
-        <div class="dropdown-item">Process Manager</div>
-        <div class="dropdown-item">Log Viewer</div>
       </div>
     </div>
     <div class="menubar-item">View
@@ -49,7 +43,6 @@
         <div class="dropdown-item" id="roll-dice">Dice Roller (2d6)</div>
       </div>
     </div>
-    <div class="menubar-item">Tools</div>
     <div class="menubar-item" style="margin-left: auto;" id="system-clock">03:25 PM</div>
   </div>
 
@@ -65,27 +58,27 @@
 
   <div class="desktop" id="desktop">
     <!-- Icons -->
-    <div class="icon" data-window="bio-window" style="top: 30px; right: 30px;">
+    <div class="icon" role="button" tabindex="0" data-window="bio-window" style="top: 30px; right: 30px;">
       <i class="fas fa-id-card"></i>
       <div class="icon-text">Identity</div>
     </div>
 
-    <div class="icon" data-window="projects-window" style="top: 130px; right: 30px;">
+    <div class="icon" role="button" tabindex="0" data-window="projects-window" style="top: 130px; right: 30px;">
       <i class="fas fa-code-branch"></i>
       <div class="icon-text">B-Sides</div>
     </div>
 
-    <div class="icon" data-window="socials-window" style="top: 230px; right: 30px;">
+    <div class="icon" role="button" tabindex="0" data-window="socials-window" style="top: 230px; right: 30px;">
       <i class="fas fa-broadcast-tower"></i>
       <div class="icon-text">Network</div>
     </div>
 
-    <div class="icon" id="return-icon" style="bottom: 130px; right: 30px;">
+    <div class="icon" role="button" tabindex="0" id="return-icon" style="bottom: 130px; right: 30px;">
       <i class="fas fa-door-open"></i>
       <div class="icon-text">Return</div>
     </div>
 
-    <div class="icon" id="trash-icon" style="bottom: 30px; right: 30px;">
+    <div class="icon" role="button" tabindex="0" id="trash-icon" style="bottom: 30px; right: 30px;">
       <i class="fas fa-trash"></i>
       <div class="icon-text">Trash</div>
     </div>
@@ -107,7 +100,7 @@
         <p>Type 'help' to see available commands.</p>
         <div class="terminal-input-line">
           <span>z:\></span>
-          <input type="text" id="terminal-input" autofocus>
+          <input type="text" id="terminal-input" aria-label="Terminal command" autocomplete="off" autocapitalize="off" spellcheck="false">
         </div>
       </div>
     </div>
@@ -132,6 +125,7 @@
             href="https://bufferbuffer.com" target="_blank" rel="noopener noreferrer">BufferBuffer</a>, maintain <a
             href="https://technicalwriting.link" target="_blank" rel="noopener noreferrer">technicalwriting.link</a>, and talk about board games
           with my wife on <a href="https://la-matatena.com" target="_blank" rel="noopener noreferrer">La Matatena</a>.</p>
+        <p>My Chrome docs: <a href="https://developer.chrome.com/authors/zapata" target="_blank" rel="noopener">developer.chrome.com/authors/zapata</a></p>
       </div>
     </div>
 
@@ -145,17 +139,32 @@
       </div>
       <div class="window-content projects-list">
         <div class="project-item">
-          <h3><a href="https://bufferbuffer.com" target="_blank" rel="noopener noreferrer">BufferBuffer</a></h3>
-          <p>The (mis)adventures of a technical writer. Featuring "Minimum Viable Documentation" and more.</p>
+          <h3><a href="https://elmeeple.com" target="_blank" rel="noopener">el Meeple</a></h3>
+          <p>Map of board game cafés and TCG stores in Latin America and Spain. Built with La Matatena.</p>
         </div>
         <div class="project-item">
-          <h3><a href="https://technicalwriting.link" target="_blank" rel="noopener noreferrer">Technical Writing Resources</a>
-          </h3>
-          <p>A curated timeline of resources for technical writers: Blogs, Books, Courses, and Videos.</p>
+          <h3><a href="https://github.com/zapata131/shelf-shuffle" target="_blank" rel="noopener">Shelf Shuffler</a></h3>
+          <p>Your BoardGameGeek collection as printable reference cards.</p>
         </div>
         <div class="project-item">
-          <h3><a href="https://la-matatena.com" target="_blank" rel="noopener noreferrer">La Matatena</a></h3>
-          <p>Board game reviews, analysis, and YouTube channel (in Spanish).</p>
+          <h3><a href="https://bufferbuffer.com" target="_blank" rel="noopener">BufferBuffer</a></h3>
+          <p>The (mis)adventures of a technical writer.</p>
+        </div>
+        <div class="project-item">
+          <h3><a href="https://technicalwriting.link" target="_blank" rel="noopener">technicalwriting.link</a></h3>
+          <p>Blogs, books, courses, and videos for technical writers.</p>
+        </div>
+        <div class="project-item">
+          <h3><a href="https://la-matatena.com" target="_blank" rel="noopener">La Matatena</a></h3>
+          <p>Board game reviews and analysis, in Spanish.</p>
+        </div>
+        <div class="project-item">
+          <h3><a href="https://doi.org/10.3390/math8111939" target="_blank" rel="noopener">Synchronization in evolving networks (2020)</a></h3>
+          <p>Mathematics 8(11). With Solís-Perales and Obregón-Pulido.</p>
+        </div>
+        <div class="project-item">
+          <h3><a href="https://github.com/zapata131/sweet16" target="_blank" rel="noopener">sweet16</a></h3>
+          <p>QMK layers for a 16-key macropad: macOS, DaVinci Resolve, Affinity Designer.</p>
         </div>
       </div>
     </div>

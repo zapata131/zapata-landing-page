@@ -458,3 +458,68 @@ body {
   color: var(--green);
   background-color: var(--current-line);
 }
+/* Touch-friendly title bars */
+.title-bar {
+  touch-action: none;
+}
+
+.icon:focus-visible {
+  outline: 2px dashed var(--cyan);
+  outline-offset: 4px;
+}
+
+/* Phones: no dragging, windows stack in reading order */
+@media (max-width: 700px) {
+  body {
+    height: auto;
+    min-height: 100vh;
+    overflow: auto;
+  }
+
+  .menubar {
+    position: sticky;
+    top: 0;
+    font-size: 13px;
+    padding: 0 4px;
+  }
+
+  .menubar-item {
+    padding: 0 8px;
+  }
+
+  .desktop {
+    height: auto;
+    width: auto;
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 16px 12px 32px;
+  }
+
+  .desktop > .icon {
+    position: static;
+    display: inline-flex;
+  }
+
+  .window {
+    position: static;
+    flex-basis: 100%;
+    width: auto !important;
+    min-width: 0;
+    order: 1;
+  }
+
+  .title-bar {
+    cursor: default;
+    touch-action: auto;
+  }
+
+  .window-content {
+    max-height: none;
+  }
+
+  .socials-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
