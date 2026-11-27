@@ -45,6 +45,16 @@ jobs:
           done
           exit $status
 
+      # The host sends CSS/JS with a one-year cache, so browsers and proxies keep old copies.
+      # A new query string per commit makes every deploy fetch fresh files.
+      - name: Version CSS and JS URLs
+        run: |
+          v="${GITHUB_SHA::8}"
+          for page in deploy/index.html deploy/es/index.html deploy/desktop/index.html; do
+            sed -i -E "s#(href|src)=\"((\.\./)?(styles\.css|script\.js))\"#\1=\"\2?v=$v\"#g" "$page"
+            grep -oE '(styles\.css|script\.js)\?v=[0-9a-f]+' "$page" | sed "s#^#$page: #"
+          done
+
       - name: Sync files
         uses: SamKirkland/FTP-Deploy-Action@v4.4.0
         with:
